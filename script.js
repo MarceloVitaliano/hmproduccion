@@ -1,1 +1,1 @@
-// JS funcional con conexión a backend, PDF, etc.
+document.getElementById('app').innerText = 'App cargada correctamente.';
