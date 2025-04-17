@@ -1,0 +1,1 @@
+// Lógica JS para ventanas emergentes (añadir cliente, notas)
