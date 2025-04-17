@@ -1,96 +1,115 @@
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7f7f7;
+  color: #222;
   margin: 0;
   padding: 0;
 }
+
 header {
-  background-color: #1d3f4f;
+  background: #1f4b59;
   color: white;
   padding: 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-header h1 {
-  margin: 0;
-}
-header button {
-  background-color: #179db2;
-  color: white;
-  padding: 0.5em 1em;
+
+.add-btn {
+  background: #0ba7b4;
   border: none;
+  padding: 0.5em 1em;
+  color: white;
+  font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
 }
+
 main {
   padding: 2em;
 }
+
 h2 {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
+
+.table-container {
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  margin-bottom: 2em;
 }
+
 th, td {
+  padding: 0.75em 1em;
   text-align: left;
-  padding: 1em;
-  border-bottom: 1px solid #ddd;
 }
-.estado {
-  padding: 0.3em 0.8em;
-  border-radius: 6px;
+
+thead {
+  background: #e5e5e5;
+}
+
+.status {
+  padding: 0.3em 0.6em;
+  border-radius: 8px;
   font-weight: bold;
 }
+
 .pendiente {
-  background: #d4f1d4;
-  color: #1e5d1e;
+  background: #d6f5d6;
+  color: #2d8c2d;
 }
+
 .proceso {
-  background: #fff3c4;
-  color: #6c5d00;
+  background: #fff2b8;
+  color: #947100;
 }
+
 .listo {
-  background: #d1f2f9;
-  color: #0a6b7d;
+  background: #caf0f8;
+  color: #0077b6;
 }
+
 .entregado {
-  background: #dcdde1;
+  background: #ddd;
   color: #555;
 }
-.actualizar {
-  background-color: #179db2;
-  border: none;
+
+.update-btn {
+  background: #0ba7b4;
   color: white;
-  padding: 0.5em 1em;
+  padding: 0.4em 0.8em;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
 }
+
 .extras {
   display: flex;
   gap: 1em;
-  margin-top: 2em;
+  justify-content: space-between;
 }
-.card {
+
+.extra {
+  background: #efefef;
   flex: 1;
-  background: #f2f2f2;
   padding: 1em;
   border-radius: 10px;
   text-align: center;
 }
-.enviar {
+
+.send-btn {
   margin-top: 2em;
-  text-align: right;
-}
-#enviarCliente {
-  background: #179db2;
+  width: 100%;
+  background: #0077b6;
   color: white;
   border: none;
-  padding: 0.8em 1.2em;
-  font-weight: bold;
+  padding: 1em;
+  font-size: 1.1em;
   border-radius: 8px;
   cursor: pointer;
 }

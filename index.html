@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,12 +10,11 @@
 <body>
   <header>
     <h1>HM Producción & Entregas</h1>
-    <button id="addTrabajo">Añadir trabajo</button>
+    <button class="add-btn">➕ Añadir trabajo</button>
   </header>
-
   <main>
-    <section class="tabla-trabajos">
-      <h2>Trabajos pendientes</h2>
+    <h2>Trabajos pendientes</h2>
+    <div class="table-container">
       <table>
         <thead>
           <tr>
@@ -25,50 +25,56 @@
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="tabla-body">
+        <tbody>
           <tr>
             <td>María López</td>
             <td>Encuadernación</td>
             <td>22 abril</td>
-            <td><span class="estado pendiente">Pendiente</span></td>
-            <td><button class="actualizar">Actualizar</button></td>
+            <td><span class="status pendiente">Pendiente</span></td>
+            <td><button class="update-btn">Actualizar</button></td>
           </tr>
           <tr>
-            <td>Jorge Martinez</td>
+            <td>Jorge Martínez</td>
             <td>Encuadernación</td>
             <td>25 abril</td>
-            <td><span class="estado proceso">En proceso</span></td>
-            <td><button class="actualizar">Actualizar</button></td>
+            <td><span class="status proceso">En proceso</span></td>
+            <td><button class="update-btn">Actualizar</button></td>
           </tr>
           <tr>
             <td>Clínica ABC</td>
             <td>Encuadernación</td>
             <td>28 abril</td>
-            <td><span class="estado listo">Listo</span></td>
-            <td><button class="actualizar">Actualizar</button></td>
+            <td><span class="status listo">Listo</span></td>
+            <td><button class="update-btn">Actualizar</button></td>
           </tr>
           <tr>
             <td>Editorial XYZ</td>
             <td>Encuadernación</td>
             <td>28 abril</td>
-            <td><span class="estado entregado">Entregado</span></td>
-            <td><button class="actualizar">Actualizar</button></td>
+            <td><span class="status entregado">Entregado</span></td>
+            <td><button class="update-btn">Actualizar</button></td>
           </tr>
         </tbody>
       </table>
-    </section>
+    </div>
 
     <section class="extras">
-      <div class="card"><h3>🗨️ Notas</h3><button>+ Añadir nota</button></div>
-      <div class="card"><h3>📎 Archivos</h3><button>+ Subir archivo</button></div>
-      <div class="card"><h3>📅 Agenda</h3></div>
+      <div class="extra notas">
+        <h3>💬 Notas</h3>
+        <button>+ Añadir nota</button>
+      </div>
+      <div class="extra archivos">
+        <h3>📎 Archivos</h3>
+        <button>+ Subir archivo</button>
+      </div>
+      <div class="extra agenda">
+        <h3>📅 Agenda</h3>
+      </div>
     </section>
 
-    <div class="enviar">
-      <button id="enviarCliente">📨 Enviar al cliente</button>
-    </div>
+    <footer>
+      <button class="send-btn">✈️ Enviar al cliente</button>
+    </footer>
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
