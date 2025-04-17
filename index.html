@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f3c4c" />
   <title>HM Producción & Entregas</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <header>
-    <h1>HM Producción & Entregas</h1>
-    <button id="addTrabajoBtn">➕ Añadir trabajo</button>
-  </header>
-  <main>
-    <section class="tabla-container">
+  <div class="app-container">
+    <header>
+      <h1>HM Producción & Entregas</h1>
+      <button id="addJobBtn">➕ Añadir trabajo</button>
+    </header>
+    <section class="job-table-section">
       <h2>Trabajos pendientes</h2>
-      <table id="tablaTrabajos">
+      <table id="jobTable">
         <thead>
           <tr>
             <th>Cliente</th>
@@ -25,10 +25,28 @@
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="trabajosBody"></tbody>
+        <tbody>
+          <!-- Aquí se renderizan los trabajos dinámicamente -->
+        </tbody>
       </table>
     </section>
-  </main>
+    <section class="controls">
+      <div class="control-block">
+        <span>💬 Notas</span>
+        <button id="addNoteBtn">+ Añadir nota</button>
+      </div>
+      <div class="control-block">
+        <span>📎 Archivos</span>
+        <button id="uploadFileBtn">+ Subir archivo</button>
+      </div>
+      <div class="control-block">
+        <span>📅 Agenda</span>
+      </div>
+    </section>
+    <footer>
+      <button id="sendPDFBtn">✉️ Enviar al cliente</button>
+    </footer>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
