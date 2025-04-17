@@ -7,88 +7,114 @@
   <title>HM Producción & Entregas</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 2rem;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
       color: #333;
     }
-    label {
-      display: block;
-      margin-top: 1rem;
+    header {
+      background: #111;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
       font-weight: bold;
     }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    .container {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 1rem;
     }
-    button {
-      margin-top: 1.5rem;
-      padding: 0.7rem 1.5rem;
-      background-color: #0077cc;
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    input[type="date"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      flex: 1;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin: 0 0 0.5rem;
+    }
+    .card p {
+      margin: 0.3rem 0;
+    }
+    .card button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
+    }
+    .card button:hover {
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
-  <h1>Enviar Actualización de Pedido</h1>
-  <form id="pedido-form">
-    <label>Cliente</label>
-    <input type="text" id="cliente" required />
-
-    <label>Tipo de trabajo</label>
-    <input type="text" id="tipo" required />
-
-    <label>Fecha estimada de entrega</label>
-    <input type="date" id="fecha_entrega" required />
-
-    <label>Estado actual</label>
-    <input type="text" id="estado" required />
-
-    <label>Notas</label>
-    <textarea id="notas" rows="4"></textarea>
-
-    <label>Correo del cliente</label>
-    <input type="email" id="email" required />
-
-    <button type="submit">Enviar PDF al cliente</button>
-  </form>
-
+  <header>HM Producción & Entregas</header>
+  <div class="container">
+    <div class="filters">
+      <input type="date" id="start-date" />
+      <input type="date" id="end-date" />
+    </div>
+    <div class="cards" id="pedido-cards">
+      <!-- Tarjetas de pedidos se agregarán dinámicamente -->
+    </div>
+  </div>
   <script>
-    document.getElementById('pedido-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const data = {
-        cliente: document.getElementById('cliente').value,
-        tipo: document.getElementById('tipo').value,
-        fecha_entrega: document.getElementById('fecha_entrega').value,
-        estado: document.getElementById('estado').value,
-        notas: document.getElementById('notas').value,
-        email: document.getElementById('email').value
-      };
-
-      const res = await fetch('https://hmproduccion-backend.onrender.com/generate-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        alert('✅ PDF enviado correctamente al cliente.');
-      } else {
-        alert('❌ Ocurrió un error al enviar el correo.');
+    const pedidos = [
+      {
+        cliente: "Notaría 25",
+        tipo: "Apéndice",
+        fecha: "2025-04-20",
+        estado: "Producción",
+        notas: "Listo para entrega el viernes",
+        correo: "cliente1@example.com"
+      },
+      {
+        cliente: "Notaría 14",
+        tipo: "Folios",
+        fecha: "2025-04-22",
+        estado: "Pendiente",
+        notas: "En revisión",
+        correo: "cliente2@example.com"
       }
+    ];
+
+    const cardsContainer = document.getElementById("pedido-cards");
+
+    pedidos.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${p.cliente}</h3>
+        <p><strong>Tipo:</strong> ${p.tipo}</p>
+        <p><strong>Entrega:</strong> ${p.fecha}</p>
+        <p><strong>Estado:</strong> ${p.estado}</p>
+        <p><strong>Notas:</strong> ${p.notas}</p>
+        <p><strong>Correo:</strong> ${p.correo}</p>
+        <button onclick="alert('Enviando PDF a ${p.correo}')">Enviar PDF al cliente</button>
+      `;
+      cardsContainer.appendChild(card);
     });
   </script>
 </body>
