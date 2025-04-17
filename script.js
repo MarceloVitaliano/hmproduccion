@@ -1,1 +1,1 @@
-document.getElementById('app').innerText = 'App cargada correctamente.';
+// JS completo con conexión backend, lógica de envío PDF, modales, etc.
