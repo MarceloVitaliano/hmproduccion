@@ -1,0 +1,96 @@
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background-color: #1d3f4f;
+  color: white;
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 {
+  margin: 0;
+}
+header button {
+  background-color: #179db2;
+  color: white;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+main {
+  padding: 2em;
+}
+h2 {
+  margin-bottom: 1em;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+th, td {
+  text-align: left;
+  padding: 1em;
+  border-bottom: 1px solid #ddd;
+}
+.estado {
+  padding: 0.3em 0.8em;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.pendiente {
+  background: #d4f1d4;
+  color: #1e5d1e;
+}
+.proceso {
+  background: #fff3c4;
+  color: #6c5d00;
+}
+.listo {
+  background: #d1f2f9;
+  color: #0a6b7d;
+}
+.entregado {
+  background: #dcdde1;
+  color: #555;
+}
+.actualizar {
+  background-color: #179db2;
+  border: none;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.extras {
+  display: flex;
+  gap: 1em;
+  margin-top: 2em;
+}
+.card {
+  flex: 1;
+  background: #f2f2f2;
+  padding: 1em;
+  border-radius: 10px;
+  text-align: center;
+}
+.enviar {
+  margin-top: 2em;
+  text-align: right;
+}
+#enviarCliente {
+  background: #179db2;
+  color: white;
+  border: none;
+  padding: 0.8em 1.2em;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -1,95 +1,74 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HM Producción & Entregas</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f5f5f5;
-      color: #333;
-    }
-    header {
-      background: #111;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .container {
-      padding: 2rem;
-    }
-    .filters {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      justify-content: center;
-    }
-    .card {
-      background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      margin: 1rem;
-      max-width: 400px;
-    }
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn {
-      background: #007bff;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .estado {
-      padding: 0.25rem 0.5rem;
-      border-radius: 5px;
-      font-weight: bold;
-      display: inline-block;
-    }
-    .verde { background-color: #d4edda; color: #155724; }
-    .amarillo { background-color: #fff3cd; color: #856404; }
-    .rojo { background-color: #f8d7da; color: #721c24; }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>HM Producción & Entregas</header>
-  <div class="container">
-    <div class="filters">
-      <input type="date" id="fromDate" />
-      <input type="date" id="toDate" />
+  <header>
+    <h1>HM Producción & Entregas</h1>
+    <button id="addTrabajo">Añadir trabajo</button>
+  </header>
+
+  <main>
+    <section class="tabla-trabajos">
+      <h2>Trabajos pendientes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Trabajo</th>
+            <th>Entrega</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr>
+            <td>María López</td>
+            <td>Encuadernación</td>
+            <td>22 abril</td>
+            <td><span class="estado pendiente">Pendiente</span></td>
+            <td><button class="actualizar">Actualizar</button></td>
+          </tr>
+          <tr>
+            <td>Jorge Martinez</td>
+            <td>Encuadernación</td>
+            <td>25 abril</td>
+            <td><span class="estado proceso">En proceso</span></td>
+            <td><button class="actualizar">Actualizar</button></td>
+          </tr>
+          <tr>
+            <td>Clínica ABC</td>
+            <td>Encuadernación</td>
+            <td>28 abril</td>
+            <td><span class="estado listo">Listo</span></td>
+            <td><button class="actualizar">Actualizar</button></td>
+          </tr>
+          <tr>
+            <td>Editorial XYZ</td>
+            <td>Encuadernación</td>
+            <td>28 abril</td>
+            <td><span class="estado entregado">Entregado</span></td>
+            <td><button class="actualizar">Actualizar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="extras">
+      <div class="card"><h3>🗨️ Notas</h3><button>+ Añadir nota</button></div>
+      <div class="card"><h3>📎 Archivos</h3><button>+ Subir archivo</button></div>
+      <div class="card"><h3>📅 Agenda</h3></div>
+    </section>
+
+    <div class="enviar">
+      <button id="enviarCliente">📨 Enviar al cliente</button>
     </div>
-    <div class="cards" id="cardsContainer">
-      <!-- Cards de ejemplo -->
-      <div class="card">
-        <h2>Notaría 25</h2>
-        <p><strong>Tipo:</strong> Apéndice</p>
-        <p><strong>Entrega:</strong> 2025-04-20</p>
-        <p><strong>Estado:</strong> <span class="estado verde">Producción</span></p>
-        <p><strong>Notas:</strong> Listo para entrega el viernes</p>
-        <p><strong>Correo:</strong> cliente1@example.com</p>
-        <button class="btn">Enviar PDF al cliente</button>
-      </div>
-      <div class="card">
-        <h2>Notaría 14</h2>
-        <p><strong>Tipo:</strong> Folios</p>
-        <p><strong>Entrega:</strong> 2025-04-22</p>
-        <p><strong>Estado:</strong> <span class="estado amarillo">Pendiente</span></p>
-        <p><strong>Notas:</strong> En revisión</p>
-        <p><strong>Correo:</strong> cliente2@example.com</p>
-        <button class="btn">Enviar PDF al cliente</button>
-      </div>
-    </div>
-  </div>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
