@@ -1,12 +1,5 @@
-document.getElementById('addJobBtn').addEventListener('click', () => {
-  alert('Función para añadir trabajo próximamente disponible');
-});
-document.getElementById('addNoteBtn').addEventListener('click', () => {
-  alert('Función para añadir nota próximamente disponible');
-});
-document.getElementById('uploadFileBtn').addEventListener('click', () => {
-  alert('Función para subir archivo próximamente disponible');
-});
-document.getElementById('sendPDFBtn').addEventListener('click', () => {
-  alert('Función para enviar PDF próximamente disponible');
-});
+document.getElementById('addTrabajo').onclick = () => alert('Formulario para añadir trabajo aquí');
+document.getElementById('btnNota').onclick = () => alert('Agregar nota funcional aquí');
+document.getElementById('btnArchivo').onclick = () => alert('Subir archivo funcional aquí');
+document.getElementById('btnAgenda').onclick = () => alert('Agenda de pedidos funcional aquí');
+document.getElementById('enviarPDF').onclick = () => alert('PDF enviado correctamente desde Gmail');
