@@ -3,119 +3,93 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f7f7;
+      background: #f5f5f5;
       color: #333;
     }
     header {
       background: #111;
-      color: white;
-      padding: 1.5rem;
+      color: #fff;
+      padding: 1rem;
       text-align: center;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: bold;
     }
     .container {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 1rem;
+      padding: 2rem;
     }
     .filters {
       display: flex;
-      justify-content: space-between;
       gap: 1rem;
       margin-bottom: 2rem;
-    }
-    input[type="date"] {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      flex: 1;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 1.5rem;
+      justify-content: center;
     }
     .card {
-      background: white;
+      background: #fff;
       border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       padding: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 1rem;
+      max-width: 400px;
     }
-    .card h3 {
-      margin: 0 0 0.5rem;
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-    .card p {
-      margin: 0.3rem 0;
-    }
-    .card button {
-      margin-top: 1rem;
-      padding: 0.5rem 1.2rem;
+    .btn {
       background: #007bff;
-      color: white;
+      color: #fff;
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.5rem;
       cursor: pointer;
+      margin-top: 1rem;
     }
-    .card button:hover {
-      background: #0056b3;
+    .estado {
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      font-weight: bold;
+      display: inline-block;
     }
+    .verde { background-color: #d4edda; color: #155724; }
+    .amarillo { background-color: #fff3cd; color: #856404; }
+    .rojo { background-color: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
   <header>HM Producción & Entregas</header>
   <div class="container">
     <div class="filters">
-      <input type="date" id="start-date" />
-      <input type="date" id="end-date" />
+      <input type="date" id="fromDate" />
+      <input type="date" id="toDate" />
     </div>
-    <div class="cards" id="pedido-cards">
-      <!-- Tarjetas de pedidos se agregarán dinámicamente -->
+    <div class="cards" id="cardsContainer">
+      <!-- Cards de ejemplo -->
+      <div class="card">
+        <h2>Notaría 25</h2>
+        <p><strong>Tipo:</strong> Apéndice</p>
+        <p><strong>Entrega:</strong> 2025-04-20</p>
+        <p><strong>Estado:</strong> <span class="estado verde">Producción</span></p>
+        <p><strong>Notas:</strong> Listo para entrega el viernes</p>
+        <p><strong>Correo:</strong> cliente1@example.com</p>
+        <button class="btn">Enviar PDF al cliente</button>
+      </div>
+      <div class="card">
+        <h2>Notaría 14</h2>
+        <p><strong>Tipo:</strong> Folios</p>
+        <p><strong>Entrega:</strong> 2025-04-22</p>
+        <p><strong>Estado:</strong> <span class="estado amarillo">Pendiente</span></p>
+        <p><strong>Notas:</strong> En revisión</p>
+        <p><strong>Correo:</strong> cliente2@example.com</p>
+        <button class="btn">Enviar PDF al cliente</button>
+      </div>
     </div>
   </div>
-  <script>
-    const pedidos = [
-      {
-        cliente: "Notaría 25",
-        tipo: "Apéndice",
-        fecha: "2025-04-20",
-        estado: "Producción",
-        notas: "Listo para entrega el viernes",
-        correo: "cliente1@example.com"
-      },
-      {
-        cliente: "Notaría 14",
-        tipo: "Folios",
-        fecha: "2025-04-22",
-        estado: "Pendiente",
-        notas: "En revisión",
-        correo: "cliente2@example.com"
-      }
-    ];
-
-    const cardsContainer = document.getElementById("pedido-cards");
-
-    pedidos.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <h3>${p.cliente}</h3>
-        <p><strong>Tipo:</strong> ${p.tipo}</p>
-        <p><strong>Entrega:</strong> ${p.fecha}</p>
-        <p><strong>Estado:</strong> ${p.estado}</p>
-        <p><strong>Notas:</strong> ${p.notas}</p>
-        <p><strong>Correo:</strong> ${p.correo}</p>
-        <button onclick="alert('Enviando PDF a ${p.correo}')">Enviar PDF al cliente</button>
-      `;
-      cardsContainer.appendChild(card);
-    });
-  </script>
 </body>
 </html>
