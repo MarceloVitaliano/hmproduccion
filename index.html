@@ -5,36 +5,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
-  <script defer src="script.js"></script>
 </head>
 <body>
-  <header>
-    <h1>HM Producción & Entregas</h1>
-    <button id="add-work">+ Añadir trabajo</button>
-  </header>
-  <main>
-    <section id="task-table">
-      <h2>Trabajos pendientes</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Trabajo</th>
-            <th>Entrega</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="task-body"></tbody>
-      </table>
-    </section>
-    <section class="bottom-buttons">
-      <div class="feature"><span>💬</span> Notas <button onclick="addNote()">+ Añadir nota</button></div>
-      <div class="feature"><span>📎</span> Archivos <button onclick="uploadFile()">+ Subir archivo</button></div>
-      <div class="feature"><span>📅</span> Agenda <button onclick="openAgenda()">Abrir agenda</button></div>
-    </section>
-    <button id="send-pdf">✉️ Enviar al cliente</button>
-  </main>
+  <h1>HM Producción & Entregas</h1>
+  <form id="formulario-trabajo">
+    <input type="text" placeholder="Cliente" id="cliente" required />
+    <input type="text" placeholder="Trabajo" id="trabajo" required />
+    <input type="text" placeholder="Fecha de entrega" id="fecha" required />
+    <select id="estado">
+      <option>Pendiente</option>
+      <option>En proceso</option>
+      <option>Listo</option>
+      <option>Entregado</option>
+    </select>
+    <button type="submit">+ Añadir trabajo</button>
+  </form>
+
+  <table id="tabla-trabajos">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Trabajo</th>
+        <th>Entrega</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="botones-secundarios">
+    <button class="btn-nota">+ Añadir nota</button>
+    <button class="btn-archivo">+ Subir archivo</button>
+    <button class="btn-agenda">Agenda</button>
+    <button class="btn-pdf">Enviar PDF al cliente</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
