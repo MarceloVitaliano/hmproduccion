@@ -1,21 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <header>
     <h1>HM Producción & Entregas</h1>
-    <button class="add-btn">➕ Añadir trabajo</button>
+    <button id="addTrabajoBtn">➕ Añadir trabajo</button>
   </header>
   <main>
-    <h2>Trabajos pendientes</h2>
-    <div class="table-container">
-      <table>
+    <section class="tabla-container">
+      <h2>Trabajos pendientes</h2>
+      <table id="tablaTrabajos">
         <thead>
           <tr>
             <th>Cliente</th>
@@ -25,56 +25,10 @@
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>María López</td>
-            <td>Encuadernación</td>
-            <td>22 abril</td>
-            <td><span class="status pendiente">Pendiente</span></td>
-            <td><button class="update-btn">Actualizar</button></td>
-          </tr>
-          <tr>
-            <td>Jorge Martínez</td>
-            <td>Encuadernación</td>
-            <td>25 abril</td>
-            <td><span class="status proceso">En proceso</span></td>
-            <td><button class="update-btn">Actualizar</button></td>
-          </tr>
-          <tr>
-            <td>Clínica ABC</td>
-            <td>Encuadernación</td>
-            <td>28 abril</td>
-            <td><span class="status listo">Listo</span></td>
-            <td><button class="update-btn">Actualizar</button></td>
-          </tr>
-          <tr>
-            <td>Editorial XYZ</td>
-            <td>Encuadernación</td>
-            <td>28 abril</td>
-            <td><span class="status entregado">Entregado</span></td>
-            <td><button class="update-btn">Actualizar</button></td>
-          </tr>
-        </tbody>
+        <tbody id="trabajosBody"></tbody>
       </table>
-    </div>
-
-    <section class="extras">
-      <div class="extra notas">
-        <h3>💬 Notas</h3>
-        <button>+ Añadir nota</button>
-      </div>
-      <div class="extra archivos">
-        <h3>📎 Archivos</h3>
-        <button>+ Subir archivo</button>
-      </div>
-      <div class="extra agenda">
-        <h3>📅 Agenda</h3>
-      </div>
     </section>
-
-    <footer>
-      <button class="send-btn">✈️ Enviar al cliente</button>
-    </footer>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,115 +1,33 @@
-
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f7f7f7;
-  color: #222;
   margin: 0;
   padding: 0;
+  background: #f5f5f5;
 }
-
 header {
-  background: #1f4b59;
+  background: #184653;
   color: white;
-  padding: 1em;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-.add-btn {
-  background: #0ba7b4;
-  border: none;
-  padding: 0.5em 1em;
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+button {
+  background-color: #00a8b5;
   color: white;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.3rem;
 }
-
-main {
-  padding: 2em;
-}
-
-h2 {
-  margin-bottom: 0.5em;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 2em;
 }
-
 th, td {
-  padding: 0.75em 1em;
+  padding: 0.5rem;
   text-align: left;
-}
-
-thead {
-  background: #e5e5e5;
-}
-
-.status {
-  padding: 0.3em 0.6em;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.pendiente {
-  background: #d6f5d6;
-  color: #2d8c2d;
-}
-
-.proceso {
-  background: #fff2b8;
-  color: #947100;
-}
-
-.listo {
-  background: #caf0f8;
-  color: #0077b6;
-}
-
-.entregado {
-  background: #ddd;
-  color: #555;
-}
-
-.update-btn {
-  background: #0ba7b4;
-  color: white;
-  padding: 0.4em 0.8em;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.extras {
-  display: flex;
-  gap: 1em;
-  justify-content: space-between;
-}
-
-.extra {
-  background: #efefef;
-  flex: 1;
-  padding: 1em;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.send-btn {
-  margin-top: 2em;
-  width: 100%;
-  background: #0077b6;
-  color: white;
-  border: none;
-  padding: 1em;
-  font-size: 1.1em;
-  border-radius: 8px;
-  cursor: pointer;
 }
