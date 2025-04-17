@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,32 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
   <link rel="stylesheet" href="styles.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
   <header>
     <h1>HM Producción & Entregas</h1>
-    <button id="addTrabajo">➕ Añadir trabajo</button>
+    <button id="add-work">+ Añadir trabajo</button>
   </header>
-  <section>
-    <table id="tabla-trabajos">
-      <thead>
-        <tr>
-          <th>Cliente</th><th>Trabajo</th><th>Entrega</th><th>Estado</th><th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Trabajos aparecerán aquí -->
-      </tbody>
-    </table>
-  </section>
-  <div class="secciones">
-    <div><span>💬</span> Notas <button id="btnNota">+ Añadir nota</button></div>
-    <div><span>📎</span> Archivos <button id="btnArchivo">+ Subir archivo</button></div>
-    <div><span>📅</span> <button id="btnAgenda">Agenda</button></div>
-  </div>
-  <footer>
-    <button id="enviarPDF">📩 Enviar al cliente</button>
-  </footer>
-  <script src="script.js"></script>
+  <main>
+    <section id="task-table">
+      <h2>Trabajos pendientes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Trabajo</th>
+            <th>Entrega</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="task-body"></tbody>
+      </table>
+    </section>
+    <section class="bottom-buttons">
+      <div class="feature"><span>💬</span> Notas <button onclick="addNote()">+ Añadir nota</button></div>
+      <div class="feature"><span>📎</span> Archivos <button onclick="uploadFile()">+ Subir archivo</button></div>
+      <div class="feature"><span>📅</span> Agenda <button onclick="openAgenda()">Abrir agenda</button></div>
+    </section>
+    <button id="send-pdf">✉️ Enviar al cliente</button>
+  </main>
 </body>
 </html>
