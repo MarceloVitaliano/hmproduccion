@@ -2,75 +2,80 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HM Producción & Entregas</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="hm_mail_icon_512x512.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1 class="titulo-principal">📦 HM Producción & Entregas</h1>
+  <div class="container">
+    <h1>HM Producción & Entregas</h1>
 
-  <button id="abrirFormulario" class="boton-abrir">+ Agregar trabajo</button>
+    <button class="btn-primary" onclick="abrirFormulario()">+ Añadir cliente</button>
 
-  <div id="formularioEmergente" class="modal">
-    <div class="modal-contenido">
-      <h2>Nuevo trabajo</h2>
-      <input type="text" id="nombre" placeholder="Nombre del cliente" />
-      <input type="email" id="correo" placeholder="Correo del cliente" />
-      <input type="text" id="pedido" placeholder="Pedido" />
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Pedido</th>
+          <th>Fecha de entrega</th>
+          <th>Notas</th>
+          <th>Correo</th>
+          <th>Estado</th>
+          <th>Editar</th>
+          <th>+Añadir nota</th>
+          <th>Subir archivo</th>
+          <th>Agenda</th>
+          <th>Enviar PDF al cliente</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-clientes"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal Formulario Añadir Cliente -->
+  <div id="modal-formulario" class="modal">
+    <div class="modal-content">
+      <h2>Nuevo cliente</h2>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" />
+
+      <label for="pedido">Pedido:</label>
+      <input type="text" id="pedido" />
+
+      <label for="fecha">Fecha de entrega:</label>
       <input type="date" id="fecha" />
-      <select id="estado">
-        <option value="Pendiente">Pendiente</option>
-        <option value="En proceso">En proceso</option>
-        <option value="Listo">Listo</option>
-        <option value="Entregado">Entregado</option>
-      </select>
-      <button id="guardarCliente">Guardar trabajo</button>
-      <button id="cerrarFormulario">Cerrar</button>
+
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" id="correo" />
+
+      <button class="btn-primary" onclick="guardarCliente()">Guardar</button>
+      <button class="btn-secondary" onclick="cerrarFormulario()">Cancelar</button>
     </div>
   </div>
 
-  <table id="tablaClientes">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Correo</th>
-        <th>Pedido</th>
-        <th>Entrega</th>
-        <th>Estado</th>
-        <th>Notas</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="cuerpoTabla"></tbody>
-  </table>
-
-  <div class="botones-inferiores">
-    <button id="btnNota">+ Añadir nota</button>
-    <button id="btnArchivo" disabled>+ Subir archivo</button>
-    <button id="btnAgenda">Agenda</button>
-    <button id="btnEnviarPDF">Enviar PDF al cliente</button>
-  </div>
-
-  <!-- Modal para añadir nota -->
-  <div id="modalNota" class="modal">
-    <div class="modal-contenido">
-      <h3>Añadir nota al cliente</h3>
-      <textarea id="notaTexto" placeholder="Escribe una nota..."></textarea>
-      <button id="guardarNota">Guardar nota</button>
-      <button onclick="cerrarModal('modalNota')">Cerrar</button>
+  <!-- Modal Añadir Nota -->
+  <div id="modal-nota" class="modal">
+    <div class="modal-content">
+      <h2>Agregar Nota</h2>
+      <textarea id="nueva-nota" rows="4" placeholder="Escribe una nota..."></textarea>
+      <button class="btn-nota" onclick="guardarNota()">Guardar Nota</button>
+      <button class="btn-secondary" onclick="cerrarModalNota()">Cancelar</button>
     </div>
   </div>
 
-  <!-- Modal para enviar PDF -->
-  <div id="modalPDF" class="modal">
-    <div class="modal-contenido">
-      <h3>Enviar PDF al cliente</h3>
-      <select id="clienteSeleccionado"></select>
-      <textarea id="notasPDF" placeholder="Notas para el PDF..."></textarea>
-      <button id="enviarPDF">Enviar PDF</button>
-      <button onclick="cerrarModal('modalPDF')">Cerrar</button>
+  <!-- Modal PDF -->
+  <div id="modal-pdf" class="modal">
+    <div class="modal-content">
+      <h2>Enviar PDF al cliente</h2>
+      <p><strong>Cliente:</strong> <span id="pdf-nombre"></span></p>
+      <p><strong>Pedido:</strong> <span id="pdf-pedido"></span></p>
+      <p><strong>Fecha de entrega:</strong> <span id="pdf-fecha"></span></p>
+
+      <label for="pdf-nota">Nota adicional:</label>
+      <textarea id="pdf-nota" rows="4" placeholder="Nota personalizada..."></textarea>
+
+      <button class="btn-pdf" onclick="enviarPDF()">Enviar PDF</button>
+      <button class="btn-secondary" onclick="cerrarModalPDF()">Cancelar</button>
     </div>
   </div>
 
