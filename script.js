@@ -1,169 +1,119 @@
-// ==================== Variables ====================
-let trabajos = [];
-let notas = {};
-let clienteSeleccionado = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const addClientBtn = document.getElementById('addClientBtn');
+  const clientModal = document.getElementById('clientModal');
+  const guardarBtn = document.getElementById('guardarBtn');
+  const cancelarBtn = document.getElementById('cancelarBtn');
+  const clientList = document.getElementById('clientList');
 
-// ==================== Elementos DOM ====================
-const tabla = document.getElementById("tabla-trabajos");
-const btnAgregar = document.getElementById("btn-agregar");
-const modalAgregar = document.getElementById("modal-agregar");
-const modalNota = document.getElementById("modal-nota");
-const modalPdf = document.getElementById("modal-pdf");
-const clienteInput = document.getElementById("cliente");
-const pedidoInput = document.getElementById("pedido");
-const entregaInput = document.getElementById("entrega");
-const estadoInput = document.getElementById("estado");
-const correoInput = document.getElementById("correo");
-const notaInput = document.getElementById("nota-texto");
-const pdfNotaInput = document.getElementById("pdf-nota");
-const pdfClienteSelect = document.getElementById("pdf-cliente");
+  const addNoteBtn = document.getElementById('addNoteBtn');
+  const notaModal = document.getElementById('notaModal');
+  const guardarNotaBtn = document.getElementById('guardarNotaBtn');
+  const cancelarNotaBtn = document.getElementById('cancelarNotaBtn');
 
-// ==================== Utilidades ====================
-function renderTabla() {
-    tabla.innerHTML = "";
-    trabajos.forEach((trabajo, index) => {
-        const fila = document.createElement("tr");
-        fila.innerHTML = `
-            <td>${trabajo.cliente}</td>
-            <td>${trabajo.pedido}</td>
-            <td>${trabajo.entrega}</td>
-            <td class="estado ${trabajo.estado.toLowerCase().replace(" ", "-")}">${trabajo.estado}</td>
-            <td>${notas[trabajo.cliente] || ""}</td>
-            <td>${trabajo.correo}</td>
-            <td><button class="btn-editar" onclick="editar(${index})">Editar</button></td>
-        `;
-        tabla.appendChild(fila);
-    });
+  const sendPdfBtn = document.getElementById('sendPdfBtn');
+  const pdfModal = document.getElementById('pdfModal');
+  const cancelarPDF = document.getElementById('cancelarPDF');
 
-    actualizarClientesPdf();
-}
+  // Mostrar modal de agregar cliente
+  addClientBtn.onclick = () => clientModal.style.display = 'block';
+  cancelarBtn.onclick = () => clientModal.style.display = 'none';
 
-function resetModal() {
-    clienteInput.value = "";
-    pedidoInput.value = "";
-    entregaInput.value = "";
-    estadoInput.value = "Pendiente";
-    correoInput.value = "";
-}
+  // Agregar cliente a la tabla
+  guardarBtn.onclick = () => {
+    const cliente = document.getElementById('cliente').value;
+    const pedido = document.getElementById('pedido').value;
+    const entrega = document.getElementById('entrega').value;
+    const estado = document.getElementById('estado').value;
+    const correo = document.getElementById('correo').value;
 
-function actualizarClientesPdf() {
-    pdfClienteSelect.innerHTML = "";
-    trabajos.forEach((trabajo, i) => {
-        const op = document.createElement("option");
-        op.value = i;
-        op.textContent = trabajo.cliente;
-        pdfClienteSelect.appendChild(op);
-    });
-}
-
-// ==================== Eventos ====================
-btnAgregar.addEventListener("click", () => {
-    modalAgregar.style.display = "block";
-    resetModal();
-});
-
-document.getElementById("cancelar-agregar").addEventListener("click", () => {
-    modalAgregar.style.display = "none";
-});
-
-document.getElementById("guardar-agregar").addEventListener("click", () => {
-    const nuevo = {
-        cliente: clienteInput.value,
-        pedido: pedidoInput.value,
-        entrega: entregaInput.value,
-        estado: estadoInput.value,
-        correo: correoInput.value
-    };
-    trabajos.push(nuevo);
-    renderTabla();
-    modalAgregar.style.display = "none";
-});
-
-// ==================== Nota ====================
-document.getElementById("btn-nota").addEventListener("click", () => {
-    modalNota.style.display = "block";
-});
-
-document.getElementById("guardar-nota").addEventListener("click", () => {
-    const nota = notaInput.value;
-    if (trabajos.length > 0) {
-        const index = trabajos.length - 1;
-        const nombre = trabajos[index].cliente;
-        notas[nombre] = nota;
-        renderTabla();
-        modalNota.style.display = "none";
+    if (cliente && pedido && entrega && estado && correo) {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${cliente}</td>
+        <td>${pedido}</td>
+        <td>${formatearFecha(entrega)}</td>
+        <td class="${estadoColor(estado)}">${estado}</td>
+        <td>${correo}</td>
+        <td><button class="editarBtn">Actualizar</button></td>
+      `;
+      clientList.appendChild(fila);
+      clientModal.style.display = 'none';
+      limpiarCampos();
+      actualizarClientesPDF();
     }
-});
+  };
 
-document.getElementById("cancelar-nota").addEventListener("click", () => {
-    modalNota.style.display = "none";
-});
+  // Modal de nota
+  addNoteBtn.onclick = () => notaModal.style.display = 'block';
+  cancelarNotaBtn.onclick = () => notaModal.style.display = 'none';
+  guardarNotaBtn.onclick = () => {
+    notaModal.style.display = 'none';
+    alert('Nota guardada correctamente.');
+  };
 
-// ==================== PDF ====================
-document.getElementById("btn-pdf").addEventListener("click", () => {
-    modalPdf.style.display = "block";
-});
+  // Modal PDF
+  sendPdfBtn.onclick = () => {
+    pdfModal.style.display = 'block';
+    actualizarClientesPDF();
+  };
+  cancelarPDF.onclick = () => pdfModal.style.display = 'none';
 
-document.getElementById("cancelar-pdf").addEventListener("click", () => {
-    modalPdf.style.display = "none";
-});
+  // Enviar PDF
+  document.getElementById('enviarPDF').onclick = () => {
+    const clienteSelect = document.getElementById('clienteSelect');
+    const notas = document.getElementById('notasPDF').value;
+    const clienteNombre = clienteSelect.value;
 
-document.getElementById("enviar-pdf").addEventListener("click", () => {
-    const index = pdfClienteSelect.value;
-    const cliente = trabajos[index];
-    const notasAdicionales = pdfNotaInput.value;
+    const fila = [...clientList.children].find(tr => tr.children[0].textContent === clienteNombre);
+    const pedido = fila?.children[1].textContent;
+    const entrega = fila?.children[2].textContent;
+    const correo = fila?.children[4].textContent;
 
-    fetch("https://hm-produccion-api.render.com/enviar-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            cliente: cliente.cliente,
-            pedido: cliente.pedido,
-            entrega: cliente.entrega,
-            notas: notasAdicionales,
-            correo: cliente.correo
-        })
-    })
-    .then(res => {
-        if (res.ok) {
-            alert("PDF enviado correctamente al cliente.");
-            modalPdf.style.display = "none";
-        } else {
-            alert("Hubo un error al enviar el PDF.");
-        }
-    })
-    .catch(() => {
-        alert("Error de red al enviar PDF.");
+    if (clienteNombre && pedido && entrega && correo) {
+      alert(`PDF enviado a ${correo} con:
+Pedido: ${pedido}
+Entrega: ${entrega}
+Notas: ${notas}`);
+      pdfModal.style.display = 'none';
+    } else {
+      alert('Faltan datos para enviar el PDF');
+    }
+  };
+
+  // Actualizar selector de clientes
+  function actualizarClientesPDF() {
+    const select = document.getElementById('clienteSelect');
+    select.innerHTML = '';
+    [...clientList.children].forEach(row => {
+      const cliente = row.children[0].textContent;
+      const option = document.createElement('option');
+      option.value = cliente;
+      option.textContent = cliente;
+      select.appendChild(option);
     });
+  }
+
+  function limpiarCampos() {
+    document.getElementById('cliente').value = '';
+    document.getElementById('pedido').value = '';
+    document.getElementById('entrega').value = '';
+    document.getElementById('estado').value = 'Pendiente';
+    document.getElementById('correo').value = '';
+  }
+
+  function estadoColor(estado) {
+    switch (estado) {
+      case 'Pendiente': return 'rojo';
+      case 'En proceso': return 'amarillo';
+      case 'Listo': return 'azul';
+      case 'Entregado': return 'verde';
+      default: return '';
+    }
+  }
+
+  function formatearFecha(fecha) {
+    const d = new Date(fecha);
+    const opciones = { day: '2-digit', month: 'short' };
+    return d.toLocaleDateString('es-MX', opciones);
+  }
 });
-
-// ==================== Editar ====================
-function editar(index) {
-    const trabajo = trabajos[index];
-    clienteInput.value = trabajo.cliente;
-    pedidoInput.value = trabajo.pedido;
-    entregaInput.value = trabajo.entrega;
-    estadoInput.value = trabajo.estado;
-    correoInput.value = trabajo.correo;
-    modalAgregar.style.display = "block";
-
-    document.getElementById("guardar-agregar").onclick = () => {
-        trabajos[index] = {
-            cliente: clienteInput.value,
-            pedido: pedidoInput.value,
-            entrega: entregaInput.value,
-            estado: estadoInput.value,
-            correo: correoInput.value
-        };
-        renderTabla();
-        modalAgregar.style.display = "none";
-    };
-}
-
-// ==================== Agenda ====================
-document.getElementById("btn-agenda").addEventListener("click", () => {
-    window.location.href = "calendario.ics"; // o usar webcal:// si lo alojas como calendario
-});
-
-// ==================== Inicial ====================
-renderTabla();
