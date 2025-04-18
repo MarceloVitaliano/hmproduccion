@@ -105,13 +105,13 @@ function abrirModalNota(index) {
   document.getElementById("nueva-nota").value = "";
 }
 
-// Soporte también para botón externo
+// Soporte para botón externo "+Añadir nota"
 function abrirModalNotaIcono() {
   if (clientes.length === 0) {
     alert("Primero añade un cliente para poder agregarle una nota.");
     return;
   }
-  abrirModalNota(clientes.length - 1); // Último cliente añadido
+  abrirModalNota(clientes.length - 1); // Apunta al último
 }
 
 function cerrarModalNota() {
@@ -138,7 +138,7 @@ function abrirAgenda() {
   window.location.href = "calshow://";
 }
 
-// --- PDF Modal ---
+// --- Modal PDF ---
 function abrirModalPDF(index) {
   clienteSeleccionado = index;
   const cliente = clientes[index];
@@ -156,19 +156,8 @@ function cerrarModalPDF() {
 function enviarPDF() {
   const cliente = clientes[clienteSeleccionado];
   const nota = document.getElementById("pdf-nota").value.trim();
-  const asunto = `Actualización de su pedido | HM Encuadernaciones`;
-  const cuerpo = `
-Estimado(a) ${cliente.nombre},
 
-Le enviamos una actualización sobre su pedido:
-
-Pedido: ${cliente.pedido}
-Fecha estimada de entrega: ${cliente.fecha}
-Nota adicional: ${nota || "Ninguna"}
-
-¡Gracias por confiar en HM Encuadernaciones!
-  `;
-
+  // Aquí se integrará la lógica con Gmail más adelante
   alert(`Correo enviado exitosamente a ${cliente.nombre}`);
   cerrarModalPDF();
 }
@@ -180,5 +169,5 @@ window.onclick = function(event) {
   }
 }
 
-// --- Inicializar ---
+// --- Inicializar tabla al cargar la página ---
 mostrarClientes();
