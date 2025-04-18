@@ -1,0 +1,1 @@
+// JS funcional con conexión al backend y botones activos
