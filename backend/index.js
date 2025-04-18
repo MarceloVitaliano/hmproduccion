@@ -1,1 +1,1 @@
-// Backend PDF y envío de correos desde HM Producción & Entregas
+// Código backend para generar y enviar el PDF
