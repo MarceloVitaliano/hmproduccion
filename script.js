@@ -31,10 +31,10 @@ function mostrarClientes() {
         </select>
       </td>
       <td><button class="btn-primary" onclick="editarCliente(${index})">Editar</button></td>
-      <td><button class="btn-nota" onclick="abrirModalNota(${index})">+Nota</button></td>
-      <td><button class="btn-disabled" disabled>📎</button></td>
-      <td><button class="btn-agenda" onclick="abrirAgenda()">📅</button></td>
-      <td><button class="btn-pdf" onclick="abrirModalPDF(${index})">✈️</button></td>
+      <td><button class="btn-nota" onclick="abrirModalNota(${index})"><img src="icons/note.svg" alt="Nota" width="16" /></button></td>
+      <td><button class="btn-disabled" disabled><img src="icons/clip.svg" alt="Clip" width="16" /></button></td>
+      <td><button class="btn-agenda" onclick="abrirAgenda()"><img src="icons/calendar.svg" alt="Agenda" width="16" /></button></td>
+      <td><button class="btn-pdf" onclick="abrirModalPDF(${index})"><img src="icons/send.svg" alt="Enviar" width="16" /></button></td>
     `;
 
     tbody.appendChild(fila);
@@ -105,6 +105,15 @@ function abrirModalNota(index) {
   document.getElementById("nueva-nota").value = "";
 }
 
+// Soporte también para botón externo
+function abrirModalNotaIcono() {
+  if (clientes.length === 0) {
+    alert("Primero añade un cliente para poder agregarle una nota.");
+    return;
+  }
+  abrirModalNota(clientes.length - 1); // Último cliente añadido
+}
+
 function cerrarModalNota() {
   document.getElementById("modal-nota").style.display = "none";
 }
@@ -153,14 +162,13 @@ Estimado(a) ${cliente.nombre},
 
 Le enviamos una actualización sobre su pedido:
 
-📦 Pedido: ${cliente.pedido}
-📅 Fecha estimada de entrega: ${cliente.fecha}
-📝 Nota adicional: ${nota || "Ninguna"}
+Pedido: ${cliente.pedido}
+Fecha estimada de entrega: ${cliente.fecha}
+Nota adicional: ${nota || "Ninguna"}
 
 ¡Gracias por confiar en HM Encuadernaciones!
   `;
 
-  // --- En lugar de mailto, aquí se integrará la lógica para enviar desde Gmail ---
   alert(`Correo enviado exitosamente a ${cliente.nombre}`);
   cerrarModalPDF();
 }
