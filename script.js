@@ -105,13 +105,12 @@ function abrirModalNota(index) {
   document.getElementById("nueva-nota").value = "";
 }
 
-// Soporte para botón externo "+Añadir nota"
 function abrirModalNotaIcono() {
   if (clientes.length === 0) {
     alert("Primero añade un cliente para poder agregarle una nota.");
     return;
   }
-  abrirModalNota(clientes.length - 1); // Apunta al último
+  abrirModalNota(clientes.length - 1);
 }
 
 function cerrarModalNota() {
@@ -153,13 +152,37 @@ function cerrarModalPDF() {
   document.getElementById("modal-pdf").style.display = "none";
 }
 
+// --- Enviar PDF al cliente vía backend ---
 function enviarPDF() {
   const cliente = clientes[clienteSeleccionado];
   const nota = document.getElementById("pdf-nota").value.trim();
 
-  // Aquí se integrará la lógica con Gmail más adelante
-  alert(`Correo enviado exitosamente a ${cliente.nombre}`);
-  cerrarModalPDF();
+  fetch("https://hmcorreospdf.onrender.com/enviar-pdf", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      nombre: cliente.nombre,
+      pedido: cliente.pedido,
+      fechaEntrega: cliente.fecha,
+      notas: nota,
+      correo: cliente.correo
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert(`✅ Correo enviado exitosamente a ${cliente.nombre}`);
+      cerrarModalPDF();
+    } else {
+      alert("❌ Ocurrió un error al enviar el correo.");
+    }
+  })
+  .catch(err => {
+    console.error("Error en la solicitud:", err);
+    alert("⚠️ No se pudo contactar con el servidor.");
+  });
 }
 
 // --- Cerrar modales al hacer clic fuera ---
