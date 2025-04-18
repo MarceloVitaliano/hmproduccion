@@ -2,21 +2,21 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="hm_mail_icon_512x512.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="hm_mail_icon_512x512.png" />
 </head>
 <body>
   <header>
-    <h1>📘 HM Producción & Entregas</h1>
-    <button id="addClientBtn">Añadir trabajo</button>
+    <h1>HM Producción & Entregas</h1>
+    <button id="btnAbrirModal">➕ Añadir trabajo</button>
   </header>
 
   <main>
     <h2>Trabajos pendientes</h2>
-    <table id="clientTable">
+    <table id="tablaTrabajos">
       <thead>
         <tr>
           <th>Cliente</th>
@@ -27,72 +27,87 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody id="clientList"></tbody>
+      <tbody></tbody>
     </table>
 
-    <div class="paneles">
-      <section class="panel">
+    <div class="dashboard">
+      <section class="tarjeta">
         <h3>💬 Notas</h3>
-        <button id="addNoteBtn">+ Añadir nota</button>
+        <button id="btnNota">+ Añadir nota</button>
       </section>
 
-      <section class="panel">
+      <section class="tarjeta">
         <h3>📎 Archivos</h3>
-        <button id="uploadBtn" disabled>+ Subir archivo</button>
+        <button id="btnArchivo" disabled>+ Subir archivo</button>
       </section>
 
-      <section class="panel">
+      <section class="tarjeta">
         <h3>📅 Agenda</h3>
-        <a href="https://calendar.google.com" target="_blank">
-          <button>Agenda</button>
-        </a>
+        <button id="btnAgenda">Agenda</button>
       </section>
     </div>
 
-    <div class="send-btn">
-      <button id="sendPdfBtn">📤 Enviar al cliente</button>
+    <div class="pdfContainer">
+      <textarea id="notaPdf" placeholder="Notas adicionales"></textarea>
+      <button id="btnEnviarPdf">✈️ Enviar al cliente</button>
     </div>
   </main>
 
-  <!-- Modales -->
-  <div id="clientModal" class="modal">
-    <div class="modal-content">
-      <h3>Agregar cliente</h3>
-      <input type="text" id="cliente" placeholder="Nombre">
-      <input type="text" id="pedido" placeholder="Trabajo">
-      <input type="date" id="entrega">
-      <select id="estado">
-        <option value="Pendiente">Pendiente</option>
-        <option value="En proceso">En proceso</option>
-        <option value="Listo">Listo</option>
-        <option value="Entregado">Entregado</option>
-      </select>
-      <input type="email" id="correo" placeholder="Correo">
-      <button id="guardarBtn">Guardar</button>
-      <button id="cancelarBtn">Cancelar</button>
+  <!-- Modal para añadir trabajo -->
+  <div class="modal" id="modalFormulario">
+    <form id="formularioTrabajo">
+      <label>
+        Cliente:
+        <input type="text" id="cliente" required />
+      </label>
+      <label>
+        Trabajo:
+        <input type="text" id="trabajo" required />
+      </label>
+      <label>
+        Entrega:
+        <input type="date" id="entrega" required />
+      </label>
+      <label>
+        Estado:
+        <select id="estado">
+          <option>Pendiente</option>
+          <option>En proceso</option>
+          <option>Listo</option>
+          <option>Entregado</option>
+        </select>
+      </label>
+      <label>
+        Correo:
+        <input type="email" id="correo" required />
+      </label>
+      <div class="botonesFormulario">
+        <button type="submit">Guardar</button>
+        <button type="button" id="cerrarModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal para añadir nota -->
+  <div class="modal" id="modalNota">
+    <textarea id="notaTexto" placeholder="Escribe una nota..."></textarea>
+    <div class="botonesFormulario">
+      <button id="guardarNota">Guardar</button>
+      <button id="cerrarNota">Cancelar</button>
     </div>
   </div>
 
-  <div id="notaModal" class="modal">
-    <div class="modal-content">
-      <h3>Escribe una nota</h3>
-      <textarea id="notaTexto" placeholder="Nota"></textarea>
-      <button id="guardarNotaBtn">Guardar</button>
-      <button id="cancelarNotaBtn">Cancelar</button>
+  <!-- Modal PDF -->
+  <div class="modal" id="modalPdf">
+    <label for="clientePdf">Selecciona cliente:</label>
+    <select id="clientePdf"></select>
+    <textarea id="notaAdicional" placeholder="Escribe una nota para el PDF"></textarea>
+    <div class="botonesFormulario">
+      <button id="enviarPdfAhora">Enviar PDF al cliente</button>
+      <button id="cerrarPdf">Cancelar</button>
     </div>
   </div>
 
-  <div id="pdfModal" class="modal">
-    <div class="modal-content">
-      <h3>Enviar PDF</h3>
-      <select id="clienteSelect"></select>
-      <textarea id="notasPDF" placeholder="Notas adicionales"></textarea>
-      <button id="enviarPDF">Enviar PDF al cliente</button>
-      <button id="cancelarPDF">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
