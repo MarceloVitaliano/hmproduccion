@@ -1,102 +1,133 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+let trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+
+function guardarEnLocalStorage() {
+  localStorage.setItem("trabajos", JSON.stringify(trabajos));
+}
+
+function actualizarTabla() {
   const tabla = document.getElementById("tabla-trabajos");
-  const btnAgregar = document.getElementById("btn-agregar");
-  const form = document.getElementById("formulario");
-  const campos = form.querySelectorAll("input, select");
-  const notasContainer = document.getElementById("notas-container");
-  const btnNota = document.getElementById("btn-nota");
-  const agendaBtn = document.getElementById("agenda");
-  const enviarBtn = document.getElementById("enviar-pdf");
-  const notasInput = document.getElementById("notas-pdf");
+  tabla.innerHTML = "";
+  trabajos.forEach((trabajo, index) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${trabajo.cliente}</td>
+      <td>${trabajo.pedido}</td>
+      <td>${trabajo.entrega}</td>
+      <td class="estado ${trabajo.estado.toLowerCase().replace(" ", "-")}">${trabajo.estado}</td>
+      <td>${trabajo.nota || ""}</td>
+      <td>${trabajo.correo}</td>
+      <td><button onclick="editarTrabajo(${index})">✏️</button></td>
+    `;
+    tabla.appendChild(fila);
+  });
+}
 
-  const colores = {
-    Pendiente: "#f8d7da",
-    "En proceso": "#fff3cd",
-    Listo: "#d1ecf1",
-    Entregado: "#d4edda"
-  };
+function guardarTrabajo() {
+  const cliente = document.getElementById("cliente").value;
+  const pedido = document.getElementById("pedido").value;
+  const entrega = document.getElementById("entrega").value;
+  const estado = document.getElementById("estado").value;
+  const correo = document.getElementById("correo").value;
 
-  function renderTabla() {
-    tabla.innerHTML = "";
-    trabajos.forEach((trabajo, index) => {
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-        <td>${trabajo.cliente}</td>
-        <td>${trabajo.pedido}</td>
-        <td>${trabajo.entrega}</td>
-        <td style="background:${colores[trabajo.estado] || "#fff"}">${trabajo.estado}</td>
-        <td>${trabajo.correo}</td>
-        <td><button onclick="editar(${index})">Actualizar</button></td>
-      `;
-      tabla.appendChild(fila);
-    });
+  if (!cliente || !pedido || !entrega || !correo) {
+    alert("Por favor, completa todos los campos.");
+    return;
   }
 
-  window.editar = (index) => {
-    const datos = trabajos[index];
-    campos[0].value = datos.cliente;
-    campos[1].value = datos.pedido;
-    campos[2].value = datos.entrega;
-    campos[3].value = datos.estado;
-    campos[4].value = datos.correo;
-    trabajos.splice(index, 1);
-    guardar();
-  };
+  trabajos.push({ cliente, pedido, entrega, estado, correo });
+  guardarEnLocalStorage();
+  actualizarTabla();
+  cerrarModal();
 
-  function guardar() {
-    const nuevo = {
-      cliente: campos[0].value,
-      pedido: campos[1].value,
-      entrega: campos[2].value,
-      estado: campos[3].value,
-      correo: campos[4].value
-    };
-    trabajos.push(nuevo);
-    localStorage.setItem("trabajos", JSON.stringify(trabajos));
-    renderTabla();
-    form.reset();
-    form.classList.add("oculto");
+  // Limpiar campos
+  document.getElementById("cliente").value = "";
+  document.getElementById("pedido").value = "";
+  document.getElementById("entrega").value = "";
+  document.getElementById("estado").value = "Pendiente";
+  document.getElementById("correo").value = "";
+}
+
+function editarTrabajo(index) {
+  const trabajo = trabajos[index];
+  document.getElementById("cliente").value = trabajo.cliente;
+  document.getElementById("pedido").value = trabajo.pedido;
+  document.getElementById("entrega").value = trabajo.entrega;
+  document.getElementById("estado").value = trabajo.estado;
+  document.getElementById("correo").value = trabajo.correo;
+  abrirModal();
+
+  // Eliminar el trabajo actual para re-guardarlo
+  trabajos.splice(index, 1);
+}
+
+function abrirModal() {
+  document.getElementById("modal").style.display = "block";
+}
+
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+function abrirNota() {
+  document.getElementById("modalNota").style.display = "block";
+}
+
+function cerrarNota() {
+  document.getElementById("modalNota").style.display = "none";
+}
+
+function guardarNota() {
+  const nota = document.getElementById("notaTexto").value;
+  if (trabajos.length === 0) {
+    alert("Primero debes capturar un trabajo.");
+    return;
   }
 
-  btnAgregar.onclick = () => {
-    form.classList.toggle("oculto");
-  };
+  // Aplica nota al último trabajo agregado
+  trabajos[trabajos.length - 1].nota = nota;
+  guardarEnLocalStorage();
+  actualizarTabla();
+  cerrarNota();
+  document.getElementById("notaTexto").value = "";
+}
 
-  form.onsubmit = (e) => {
-    e.preventDefault();
-    guardar();
-  };
+function abrirEnvioPDF() {
+  const select = document.getElementById("clienteSeleccionado");
+  select.innerHTML = "";
+  trabajos.forEach((t, i) => {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = `${t.cliente} - ${t.pedido}`;
+    select.appendChild(option);
+  });
+  document.getElementById("modalPDF").style.display = "block";
+}
 
-  btnNota.onclick = () => {
-    const nota = prompt("Escribe una nota:");
-    if (nota) {
-      const p = document.createElement("p");
-      p.textContent = nota;
-      notasContainer.appendChild(p);
-    }
-  };
+function cerrarEnvioPDF() {
+  document.getElementById("modalPDF").style.display = "none";
+  document.getElementById("notasPDF").value = "";
+}
 
-  agendaBtn.onclick = () => {
-    window.location.href = "webcal://ical.mac.com/calendar/ical/Apple_Holidays.ics";
-  };
+function enviarPDF() {
+  const index = document.getElementById("clienteSeleccionado").value;
+  const notas = document.getElementById("notasPDF").value;
+  const trabajo = trabajos[index];
 
-  enviarBtn.onclick = () => {
-    const index = tabla.rows.length - 1;
-    if (index < 0) return alert("No hay cliente seleccionado.");
-    const trabajo = trabajos[index];
-    fetch("https://hmproduccion-backend.vercel.app/enviar-pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        cliente: trabajo.cliente,
-        pedido: trabajo.pedido,
-        entrega: trabajo.entrega,
-        notas: notasInput.value,
-        correo: trabajo.correo
-      })
-    }).then(res => res.ok ? alert("Correo enviado correctamente.") : alert("Error al enviar."));
-  };
+  fetch("https://hmproduccion-backend.onrender.com/enviar-pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      cliente: trabajo.cliente,
+      pedido: trabajo.pedido,
+      entrega: trabajo.entrega,
+      notas,
+      correo: trabajo.correo
+    })
+  })
+    .then(res => res.ok ? alert("✅ PDF enviado correctamente.") : alert("❌ Error al enviar PDF."))
+    .catch(() => alert("❌ Fallo la conexión con el servidor."));
+    
+  cerrarEnvioPDF();
+}
 
-  renderTabla();
-});
+window.onload = actualizarTabla;
