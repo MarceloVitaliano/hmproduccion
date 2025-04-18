@@ -1,204 +1,128 @@
-// -----------------------------
-// Variables globales
-// -----------------------------
-let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
-let clienteSeleccionadoIndex = null;
+document.addEventListener("DOMContentLoaded", () => {
+  const trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+  const tablaBody = document.querySelector("#tabla-clientes tbody");
+  const formulario = document.getElementById("formulario-trabajo");
+  const modal = document.getElementById("modal-formulario");
+  const btnNuevo = document.getElementById("btn-nuevo");
 
-// -----------------------------
-// DOM
-// -----------------------------
-const abrirFormulario = document.getElementById("abrirFormulario");
-const formularioEmergente = document.getElementById("formularioEmergente");
-const cerrarFormulario = document.getElementById("cerrarFormulario");
-const guardarCliente = document.getElementById("guardarCliente");
-const cuerpoTabla = document.getElementById("cuerpoTabla");
-const btnNota = document.getElementById("btnNota");
-const btnAgenda = document.getElementById("btnAgenda");
-const btnEnviarPDF = document.getElementById("btnEnviarPDF");
-const modalNota = document.getElementById("modalNota");
-const guardarNota = document.getElementById("guardarNota");
-const notaTexto = document.getElementById("notaTexto");
-const modalPDF = document.getElementById("modalPDF");
-const clienteSeleccionado = document.getElementById("clienteSeleccionado");
-const notasPDF = document.getElementById("notasPDF");
-const enviarPDF = document.getElementById("enviarPDF");
+  function guardarTrabajos() {
+    localStorage.setItem("trabajos", JSON.stringify(trabajos));
+  }
 
-// -----------------------------
-// Eventos principales
-// -----------------------------
-abrirFormulario.onclick = () => formularioEmergente.style.display = "flex";
-cerrarFormulario.onclick = () => formularioEmergente.style.display = "none";
+  function renderTabla() {
+    tablaBody.innerHTML = "";
+    trabajos.forEach((trabajo, index) => {
+      if (trabajo.estado === "Entregado") return;
 
-guardarCliente.onclick = () => {
-  const nombre = document.getElementById("nombre").value;
-  const correo = document.getElementById("correo").value;
-  const pedido = document.getElementById("pedido").value;
-  const fecha = document.getElementById("fecha").value;
-  const estado = document.getElementById("estado").value;
+      const fila = document.createElement("tr");
 
-  if (!nombre || !pedido || !fecha || !estado || !correo) return alert("Llena todos los campos");
+      const celdaNombre = document.createElement("td");
+      celdaNombre.textContent = trabajo.nombre;
 
-  const cliente = { nombre, correo, pedido, fecha, estado, notas: "" };
-  clientes.push(cliente);
-  localStorage.setItem("clientes", JSON.stringify(clientes));
+      const celdaPedido = document.createElement("td");
+      celdaPedido.textContent = trabajo.pedido;
 
-  document.getElementById("nombre").value = "";
-  document.getElementById("correo").value = "";
-  document.getElementById("pedido").value = "";
-  document.getElementById("fecha").value = "";
-  document.getElementById("estado").value = "Pendiente";
+      const celdaEntrega = document.createElement("td");
+      celdaEntrega.textContent = trabajo.entrega;
 
-  formularioEmergente.style.display = "none";
-  renderizarClientes();
-};
+      const celdaEstado = document.createElement("td");
+      celdaEstado.textContent = trabajo.estado;
+      celdaEstado.style.fontWeight = "bold";
 
-// -----------------------------
-// Renderizar tabla
-// -----------------------------
-function renderizarClientes() {
-  cuerpoTabla.innerHTML = "";
-  clienteSeleccionado.innerHTML = "";
+      // Color según estado
+      switch (trabajo.estado) {
+        case "Pendiente":
+          celdaEstado.style.color = "red";
+          break;
+        case "En proceso":
+          celdaEstado.style.color = "orange";
+          break;
+        case "Listo":
+          celdaEstado.style.color = "blue";
+          break;
+        case "Entregado":
+          celdaEstado.style.color = "green";
+          break;
+        default:
+          celdaEstado.style.color = "black";
+      }
 
-  clientes.forEach((cliente, index) => {
-    const fila = document.createElement("tr");
+      // Si cambia a "Entregado", eliminar automáticamente
+      const selectEstado = document.createElement("select");
+      ["Pendiente", "En proceso", "Listo", "Entregado"].forEach(opcion => {
+        const option = document.createElement("option");
+        option.value = opcion;
+        option.text = opcion;
+        if (opcion === trabajo.estado) option.selected = true;
+        selectEstado.appendChild(option);
+      });
+      selectEstado.addEventListener("change", () => {
+        if (selectEstado.value === "Entregado") {
+          alert("✅ Pedido entregado. Se eliminará de la lista.");
+          trabajos.splice(index, 1);
+        } else {
+          trabajo.estado = selectEstado.value;
+        }
+        guardarTrabajos();
+        renderTabla();
+      });
+      celdaEstado.innerHTML = "";
+      celdaEstado.appendChild(selectEstado);
 
-    // Colores por estado
-    let color = "";
-    if (cliente.estado === "Pendiente") color = "rojo";
-    else if (cliente.estado === "En proceso") color = "amarillo";
-    else if (cliente.estado === "Listo") color = "azul";
-    else if (cliente.estado === "Entregado") {
-      clientes.splice(index, 1);
-      localStorage.setItem("clientes", JSON.stringify(clientes));
-      renderizarClientes();
-      alert("✅ Pedido marcado como ENTREGADO. Eliminado del dashboard.");
-      return;
-    }
+      const celdaCorreo = document.createElement("td");
+      celdaCorreo.textContent = trabajo.correo || "";
 
-    fila.innerHTML = `
-      <td>${cliente.nombre}</td>
-      <td>${cliente.correo}</td>
-      <td>${cliente.pedido}</td>
-      <td>${cliente.fecha}</td>
-      <td class="${color}">
-        <select onchange="actualizarEstado(${index}, this.value)">
-          <option ${cliente.estado === "Pendiente" ? "selected" : ""}>Pendiente</option>
-          <option ${cliente.estado === "En proceso" ? "selected" : ""}>En proceso</option>
-          <option ${cliente.estado === "Listo" ? "selected" : ""}>Listo</option>
-          <option ${cliente.estado === "Entregado" ? "selected" : ""}>Entregado</option>
-        </select>
-      </td>
-      <td>${cliente.notas || "—"}</td>
-      <td><button onclick="editarCliente(${index})">Editar</button></td>
-    `;
+      const celdaAcciones = document.createElement("td");
+      const btnEditar = document.createElement("button");
+      btnEditar.textContent = "Editar";
+      btnEditar.className = "btn-editar";
+      btnEditar.onclick = () => {
+        document.getElementById("nombre").value = trabajo.nombre;
+        document.getElementById("pedido").value = trabajo.pedido;
+        document.getElementById("entrega").value = trabajo.entrega;
+        document.getElementById("correo").value = trabajo.correo;
+        formulario.dataset.editIndex = index;
+        modal.style.display = "block";
+      };
+      celdaAcciones.appendChild(btnEditar);
 
-    cuerpoTabla.appendChild(fila);
+      fila.appendChild(celdaNombre);
+      fila.appendChild(celdaPedido);
+      fila.appendChild(celdaEntrega);
+      fila.appendChild(celdaEstado);
+      fila.appendChild(celdaCorreo);
+      fila.appendChild(celdaAcciones);
+      tablaBody.appendChild(fila);
+    });
+  }
 
-    const option = document.createElement("option");
-    option.value = index;
-    option.textContent = cliente.nombre;
-    clienteSeleccionado.appendChild(option);
-  });
-}
+  formulario.addEventListener("submit", e => {
+    e.preventDefault();
+    const nombre = document.getElementById("nombre").value;
+    const pedido = document.getElementById("pedido").value;
+    const entrega = document.getElementById("entrega").value;
+    const correo = document.getElementById("correo").value;
+    const nuevoTrabajo = { nombre, pedido, entrega, estado: "Pendiente", correo };
 
-// -----------------------------
-// Actualizar estado
-// -----------------------------
-function actualizarEstado(index, nuevoEstado) {
-  clientes[index].estado = nuevoEstado;
-  localStorage.setItem("clientes", JSON.stringify(clientes));
-  renderizarClientes();
-}
-
-// -----------------------------
-// Editar cliente (solo nombre, correo, pedido y fecha)
-function editarCliente(index) {
-  const c = clientes[index];
-  document.getElementById("nombre").value = c.nombre;
-  document.getElementById("correo").value = c.correo;
-  document.getElementById("pedido").value = c.pedido;
-  document.getElementById("fecha").value = c.fecha;
-  document.getElementById("estado").value = c.estado;
-  clienteSeleccionadoIndex = index;
-  formularioEmergente.style.display = "flex";
-
-  guardarCliente.onclick = () => {
-    clientes[clienteSeleccionadoIndex] = {
-      nombre: document.getElementById("nombre").value,
-      correo: document.getElementById("correo").value,
-      pedido: document.getElementById("pedido").value,
-      fecha: document.getElementById("fecha").value,
-      estado: document.getElementById("estado").value,
-      notas: clientes[clienteSeleccionadoIndex].notas || ""
-    };
-    localStorage.setItem("clientes", JSON.stringify(clientes));
-    renderizarClientes();
-    formularioEmergente.style.display = "none";
-  };
-}
-
-// -----------------------------
-// Botón "Añadir nota"
-btnNota.onclick = () => {
-  if (clientes.length === 0) return alert("No hay clientes disponibles");
-  modalNota.style.display = "flex";
-};
-
-guardarNota.onclick = () => {
-  const index = clienteSeleccionado.value;
-  clientes[index].notas = notaTexto.value;
-  localStorage.setItem("clientes", JSON.stringify(clientes));
-  notaTexto.value = "";
-  modalNota.style.display = "none";
-  renderizarClientes();
-};
-
-// -----------------------------
-// Botón "Agenda"
-btnAgenda.onclick = () => {
-  window.open("calshow://", "_blank");
-};
-
-// -----------------------------
-// Botón "Enviar PDF al cliente"
-btnEnviarPDF.onclick = () => {
-  if (clientes.length === 0) return alert("No hay clientes disponibles");
-  modalPDF.style.display = "flex";
-};
-
-enviarPDF.onclick = () => {
-  const index = clienteSeleccionado.value;
-  const cliente = clientes[index];
-  const notas = notasPDF.value;
-  const datos = {
-    to: cliente.correo,
-    subject: "Actualización de su pedido | HM Encuadernaciones",
-    nombre: cliente.nombre,
-    pedido: cliente.pedido,
-    entrega: cliente.fecha,
-    notas
-  };
-
-  fetch("https://hmproduccion-backend.onrender.com/enviar-pdf", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(datos)
-  }).then(res => {
-    if (res.ok) {
-      alert("✅ PDF enviado correctamente al cliente.");
-      modalPDF.style.display = "none";
+    if (formulario.dataset.editIndex) {
+      const index = parseInt(formulario.dataset.editIndex);
+      trabajos[index] = nuevoTrabajo;
+      delete formulario.dataset.editIndex;
     } else {
-      alert("❌ Hubo un error al enviar el PDF.");
+      trabajos.push(nuevoTrabajo);
     }
+
+    guardarTrabajos();
+    renderTabla();
+    formulario.reset();
+    modal.style.display = "none";
   });
-};
 
-// -----------------------------
-// Cerrar modal genérico
-function cerrarModal(id) {
-  document.getElementById(id).style.display = "none";
-}
+  btnNuevo.addEventListener("click", () => {
+    formulario.reset();
+    delete formulario.dataset.editIndex;
+    modal.style.display = "block";
+  });
 
-// -----------------------------
-// Cargar clientes al inicio
-renderizarClientes();
+  renderTabla();
+});
