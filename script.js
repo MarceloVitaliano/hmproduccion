@@ -1,82 +1,117 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const clientList = document.getElementById('client-list');
-  const modal = document.getElementById('modal');
-  const openModalBtn = document.getElementById('openModal');
-  const closeModalBtn = document.getElementById('closeModal');
-  const addClientForm = document.getElementById('addClientForm');
-  const nameInput = document.getElementById('name');
-  const jobInput = document.getElementById('job');
-  const dateInput = document.getElementById('delivery');
-  const statusInput = document.getElementById('status');
-  const emailInput = document.getElementById('email');
+  const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+  const tabla = document.querySelector('#tabla-clientes');
+  const modal = document.querySelector('#modal-cliente');
+  const btnAbrirModal = document.querySelector('#btn-abrir-modal');
+  const btnGuardarCliente = document.querySelector('#guardar-cliente');
+  const btnCancelarCliente = document.querySelector('#cancelar-cliente');
 
-  let clients = JSON.parse(localStorage.getItem('clients')) || [];
+  const nombreInput = document.querySelector('#nombre');
+  const pedidoInput = document.querySelector('#pedido');
+  const fechaInput = document.querySelector('#fecha');
+  const estadoInput = document.querySelector('#estado');
+  const correoInput = document.querySelector('#correo');
 
-  const saveClients = () => {
-    localStorage.setItem('clients', JSON.stringify(clients));
-  };
+  function guardarClientesLocal() {
+    localStorage.setItem('clientes', JSON.stringify(clientes));
+  }
 
-  const renderClients = () => {
-    clientList.innerHTML = '';
-    clients.forEach((client, index) => {
-      if (client.status === 'Entregado') return;
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${client.name}</td>
-        <td>${client.job}</td>
-        <td>${client.delivery}</td>
-        <td><span class="status ${client.status.toLowerCase().replace(' ', '-')}">${client.status}</span></td>
-        <td>${client.email}</td>
-        <td><button class="edit-btn" data-index="${index}">Actualizar</button></td>
+  function renderizarClientes() {
+    tabla.innerHTML = '';
+    clientes.forEach((cliente, index) => {
+      if (cliente.estado === 'Entregado') return;
+
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${cliente.nombre}</td>
+        <td>${cliente.pedido}</td>
+        <td>${cliente.fecha}</td>
+        <td><span class="badge ${colorEstado(cliente.estado)}">${cliente.estado}</span></td>
+        <td>${cliente.correo}</td>
+        <td><button class="btn-editar" data-index="${index}">Actualizar</button></td>
       `;
-      clientList.appendChild(row);
+      tabla.appendChild(fila);
     });
-    attachEditListeners();
-  };
 
-  const attachEditListeners = () => {
-    const editButtons = document.querySelectorAll('.edit-btn');
-    editButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const i = e.target.dataset.index;
-        const newStatus = prompt('Nuevo estado: Pendiente, En proceso, Listo o Entregado', clients[i].status);
-        if (newStatus) {
-          clients[i].status = newStatus;
-          if (newStatus === 'Entregado') {
-            clients.splice(i, 1);
-            alert('Cliente eliminado por estado "Entregado".');
-          }
-          saveClients();
-          renderClients();
-        }
+    // Guardar estado filtrado (sin entregados)
+    const clientesFiltrados = clientes.filter(c => c.estado !== 'Entregado');
+    localStorage.setItem('clientes', JSON.stringify(clientesFiltrados));
+
+    // Asociar botón de editar
+    document.querySelectorAll('.btn-editar').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const idx = e.target.dataset.index;
+        editarCliente(idx);
       });
     });
-  };
+  }
 
-  openModalBtn.addEventListener('click', () => {
-    modal.style.display = 'block';
-  });
+  function colorEstado(estado) {
+    switch (estado) {
+      case 'Pendiente': return 'badge-pendiente';
+      case 'En proceso': return 'badge-proceso';
+      case 'Listo': return 'badge-listo';
+      case 'Entregado': return 'badge-entregado';
+      default: return '';
+    }
+  }
 
-  closeModalBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-    addClientForm.reset();
-  });
+  function abrirModal() {
+    modal.classList.add('mostrar');
+  }
 
-  addClientForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newClient = {
-      name: nameInput.value,
-      job: jobInput.value,
-      delivery: dateInput.value,
-      status: statusInput.value,
-      email: emailInput.value
+  function cerrarModal() {
+    modal.classList.remove('mostrar');
+    limpiarFormulario();
+  }
+
+  function limpiarFormulario() {
+    nombreInput.value = '';
+    pedidoInput.value = '';
+    fechaInput.value = '';
+    estadoInput.value = 'Pendiente';
+    correoInput.value = '';
+  }
+
+  function agregarCliente() {
+    const cliente = {
+      nombre: nombreInput.value,
+      pedido: pedidoInput.value,
+      fecha: fechaInput.value,
+      estado: estadoInput.value,
+      correo: correoInput.value
     };
-    clients.push(newClient);
-    saveClients();
-    renderClients();
-    addClientForm.reset();
-    modal.style.display = 'none';
-  });
 
-  renderClients();
+    if (!cliente.nombre || !cliente.pedido || !cliente.fecha || !cliente.correo) {
+      alert('Por favor, llena todos los campos');
+      return;
+    }
+
+    clientes.push(cliente);
+    guardarClientesLocal();
+    renderizarClientes();
+    cerrarModal();
+  }
+
+  function editarCliente(index) {
+    const nuevoEstado = prompt('Nuevo estado para este cliente (Pendiente, En proceso, Listo, Entregado):');
+    if (!nuevoEstado) return;
+
+    clientes[index].estado = nuevoEstado;
+
+    if (nuevoEstado === 'Entregado') {
+      alert('✅ Cliente eliminado automáticamente al marcarlo como entregado.');
+    }
+
+    guardarClientesLocal();
+    renderizarClientes();
+  }
+
+  // Eventos
+  btnAbrirModal.addEventListener('click', abrirModal);
+  btnCancelarCliente.addEventListener('click', cerrarModal);
+  btnGuardarCliente.addEventListener('click', agregarCliente);
+
+  // Inicial
+  renderizarClientes();
 });
