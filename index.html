@@ -1,1 +1,81 @@
-<!-- index.html 100% funcional con todo integrado -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HM Producción & Entregas</title>
+  <link rel="icon" href="frontend/hm_mail_icon_512x512.png" />
+  <link rel="manifest" href="frontend/manifest.json" />
+  <link rel="stylesheet" href="frontend/styles.css" />
+</head>
+<body>
+  <h1 class="titulo-app">📘 HM Producción & Entregas</h1>
+
+  <div class="contenedor-tabla">
+    <table id="tabla-clientes">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Pedido</th>
+          <th>Entrega</th>
+          <th>Estado</th>
+          <th>Notas</th>
+          <th>Correo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpo-tabla"></tbody>
+    </table>
+  </div>
+
+  <div class="botones-globales">
+    <button onclick="abrirModalAgregar()">+ Agregar cliente</button>
+    <button onclick="abrirModalNota()">+ Añadir nota</button>
+    <button disabled>+ Subir archivo</button>
+    <button onclick="abrirAgenda()">Agenda</button>
+    <button onclick="abrirModalPDF()">Enviar PDF al cliente</button>
+  </div>
+
+  <!-- Modal Agregar cliente -->
+  <div class="modal" id="modal-agregar">
+    <div class="modal-contenido">
+      <h3>Agregar cliente</h3>
+      <input placeholder="Nombre" id="nuevo-nombre" />
+      <input placeholder="Pedido" id="nuevo-pedido" />
+      <input type="date" id="nueva-entrega" />
+      <select id="nuevo-estado">
+        <option>Pendiente</option>
+        <option>En proceso</option>
+        <option>Listo</option>
+        <option>Entregado</option>
+      </select>
+      <input placeholder="Correo" id="nuevo-correo" />
+      <button onclick="guardarCliente()">Guardar</button>
+      <button onclick="cerrarModal('modal-agregar')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal Añadir nota -->
+  <div class="modal" id="modal-nota">
+    <div class="modal-contenido">
+      <h3>Escribe una nota</h3>
+      <textarea id="nota-cliente" rows="4"></textarea>
+      <button onclick="guardarNota()">Guardar</button>
+      <button onclick="cerrarModal('modal-nota')">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal PDF -->
+  <div class="modal" id="modal-pdf">
+    <div class="modal-contenido">
+      <h3>Enviar PDF</h3>
+      <select id="cliente-pdf"></select>
+      <textarea id="notas-pdf" placeholder="Notas adicionales" rows="4"></textarea>
+      <button onclick="enviarPDF()">Enviar PDF al cliente</button>
+      <button onclick="cerrarModal('modal-pdf')">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="frontend/script.js"></script>
+</body>
+</html>
