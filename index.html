@@ -2,83 +2,66 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HM Producción & Entregas</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>HM Producción & Entregas</h1>
+  <div class="app-container">
+    <header class="header">
+      <h1>HM Producción & Entregas</h1>
+      <button class="btn-add" onclick="abrirFormulario()">+ Añadir trabajo</button>
+    </header>
 
-    <button class="btn-primary" onclick="abrirFormulario()">+ Añadir cliente</button>
+    <section class="trabajos">
+      <h2>Trabajos pendientes</h2>
+      <div class="tabla-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Trabajo</th>
+              <th>Entrega</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-clientes"></tbody>
+        </table>
+      </div>
+    </section>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Pedido</th>
-          <th>Fecha de entrega</th>
-          <th>Notas</th>
-          <th>Correo</th>
-          <th>Estado</th>
-          <th>Editar</th>
-          <th>+Añadir nota</th>
-          <th>Subir archivo</th>
-          <th>Agenda</th>
-          <th>Enviar PDF al cliente</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-clientes"></tbody>
-    </table>
+    <section class="acciones">
+      <div class="card" onclick="abrirModalNotaIcono()">
+        <img src="icons/note.svg" alt="Notas" />
+        <span>+ Añadir nota</span>
+      </div>
+      <div class="card disabled">
+        <img src="icons/clip.svg" alt="Archivos" />
+        <span>+ Subir archivo</span>
+      </div>
+      <div class="card" onclick="abrirAgenda()">
+        <img src="icons/calendar.svg" alt="Agenda" />
+        <span>Agenda</span>
+      </div>
+    </section>
+
+    <footer>
+      <button class="btn-enviar" onclick="abrirModalPDFUltimo()">
+        <img src="icons/send.svg" alt="Enviar" />
+        Enviar al cliente
+      </button>
+    </footer>
+
+    <!-- Aquí siguen los modales -->
+    <div id="modal-formulario" class="modal">...</div>
+    <div id="modal-nota" class="modal">...</div>
+    <div id="modal-pdf" class="modal">...</div>
+
+    <script src="script.js"></script>
   </div>
-
-  <!-- Modal Formulario Añadir Cliente -->
-  <div id="modal-formulario" class="modal">
-    <div class="modal-content">
-      <h2>Nuevo cliente</h2>
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" />
-
-      <label for="pedido">Pedido:</label>
-      <input type="text" id="pedido" />
-
-      <label for="fecha">Fecha de entrega:</label>
-      <input type="date" id="fecha" />
-
-      <label for="correo">Correo electrónico:</label>
-      <input type="email" id="correo" />
-
-      <button class="btn-primary" onclick="guardarCliente()">Guardar</button>
-      <button class="btn-secondary" onclick="cerrarFormulario()">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- Modal Añadir Nota -->
-  <div id="modal-nota" class="modal">
-    <div class="modal-content">
-      <h2>Agregar Nota</h2>
-      <textarea id="nueva-nota" rows="4" placeholder="Escribe una nota..."></textarea>
-      <button class="btn-nota" onclick="guardarNota()">Guardar Nota</button>
-      <button class="btn-secondary" onclick="cerrarModalNota()">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- Modal PDF -->
-  <div id="modal-pdf" class="modal">
-    <div class="modal-content">
-      <h2>Enviar PDF al cliente</h2>
-      <p><strong>Cliente:</strong> <span id="pdf-nombre"></span></p>
-      <p><strong>Pedido:</strong> <span id="pdf-pedido"></span></p>
-      <p><strong>Fecha de entrega:</strong> <span id="pdf-fecha"></span></p>
-
-      <label for="pdf-nota">Nota adicional:</label>
-      <textarea id="pdf-nota" rows="4" placeholder="Nota personalizada..."></textarea>
-
-      <button class="btn-pdf" onclick="enviarPDF()">Enviar PDF</button>
-      <button class="btn-secondary" onclick="cerrarModalPDF()">Cancelar</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
