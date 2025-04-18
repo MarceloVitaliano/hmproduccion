@@ -1,130 +1,172 @@
-/* Fuente elegante */
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #fdfcfb;
+  background-color: #f9f9f9;
   margin: 0;
   padding: 0;
   color: #333;
 }
 
-/* Encabezado */
 header {
-  background-color: #1e4b57;
+  background-color: #12414e;
   color: white;
   padding: 20px;
+  font-size: 1.6rem;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-header h1 {
-  font-size: 24px;
-  margin: 0;
 }
 
 header button {
   background-color: #00bcd4;
   color: white;
-  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
+  padding: 10px 15px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
 }
 
-/* Tabla */
+.container {
+  padding: 20px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-}
-
-thead {
-  background-color: #e9e9e9;
+  margin-bottom: 20px;
 }
 
 th, td {
-  padding: 14px;
   text-align: left;
+  padding: 12px;
+}
+
+th {
+  background-color: #e9e9e9;
+  font-weight: bold;
+}
+
+td {
+  background-color: #ffffff;
   border-bottom: 1px solid #ddd;
 }
 
-.status-pendiente {
-  background-color: #d1f7d6;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
+.estado-pendiente {
+  background-color: #ffe5e5;
+  color: #b30000;
   font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-.status-proceso {
-  background-color: #ffe9a7;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
+.estado-enproceso {
+  background-color: #fff8cc;
+  color: #b38f00;
   font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-.status-listo {
-  background-color: #c9f0ff;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
+.estado-listo {
+  background-color: #d1f0ff;
+  color: #00688b;
   font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-.status-entregado {
-  background-color: #d8d8d8;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
+.estado-entregado {
+  background-color: #e0e0e0;
+  color: #666;
   font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-/* Secciones inferiores */
-.section-container {
+button {
+  padding: 8px 12px;
+  margin: 6px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #ccc;
+}
+
+button.primary {
+  background-color: #00bcd4;
+  color: white;
+}
+
+button.primary:hover {
+  background-color: #009db3;
+}
+
+section {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-  gap: 20px;
   flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .section-box {
+  flex: 1 1 30%;
   background-color: #f2f2f2;
-  padding: 20px;
-  border-radius: 12px;
-  flex: 1;
-  min-width: 200px;
-  text-align: center;
-  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 240px;
 }
 
-.section-box button {
-  margin-top: 10px;
-  background-color: white;
-  border: 2px solid #ccc;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  resize: none;
+  margin-top: 8px;
 }
 
-/* Botón final */
-.send-btn-container {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.send-btn {
+#btnEnviarPDF {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 24px;
+  font-size: 1rem;
   background-color: #00bcd4;
   color: white;
-  padding: 14px 22px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  th, td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  section {
+    flex-direction: column;
+  }
+
+  .section-box {
+    flex: 1 1 100%;
+  }
 }
