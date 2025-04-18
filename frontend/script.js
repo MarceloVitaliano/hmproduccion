@@ -1,1 +1,1 @@
-// Lógica JS de frontend
+// Script de la app
