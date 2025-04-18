@@ -1,133 +1,126 @@
-let trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formulario");
+  const tablaBody = document.getElementById("tabla-clientes-body");
+  const btnPDF = document.getElementById("btn-pdf");
+  const nombreInput = document.getElementById("nombre");
+  const pedidoInput = document.getElementById("pedido");
+  const entregaInput = document.getElementById("entrega");
 
-function guardarEnLocalStorage() {
-  localStorage.setItem("trabajos", JSON.stringify(trabajos));
-}
+  let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
 
-function actualizarTabla() {
-  const tabla = document.getElementById("tabla-trabajos");
-  tabla.innerHTML = "";
-  trabajos.forEach((trabajo, index) => {
-    const fila = document.createElement("tr");
-    fila.innerHTML = `
-      <td>${trabajo.cliente}</td>
-      <td>${trabajo.pedido}</td>
-      <td>${trabajo.entrega}</td>
-      <td class="estado ${trabajo.estado.toLowerCase().replace(" ", "-")}">${trabajo.estado}</td>
-      <td>${trabajo.nota || ""}</td>
-      <td>${trabajo.correo}</td>
-      <td><button onclick="editarTrabajo(${index})">✏️</button></td>
-    `;
-    tabla.appendChild(fila);
+  const guardarClientes = () => {
+    localStorage.setItem("clientes", JSON.stringify(clientes));
+  };
+
+  const renderClientes = () => {
+    tablaBody.innerHTML = "";
+    clientes.forEach((cliente, index) => {
+      const fila = document.createElement("tr");
+
+      const estadoColor = {
+        "Pendiente": "#ff4d4d",
+        "En proceso": "#ffd11a",
+        "Listo": "#3399ff",
+        "Entregado": "#33cc33"
+      };
+
+      const tdNombre = `<td>${cliente.nombre}</td>`;
+      const tdPedido = `<td>${cliente.pedido}</td>`;
+      const tdEntrega = `<td>${cliente.entrega}</td>`;
+      const tdNotas = `<td>${cliente.notas || ""}</td>`;
+      const tdCorreo = `<td>${cliente.correo || ""}</td>`;
+
+      const tdEstado = `<td style="color: white; background-color: ${estadoColor[cliente.estado] || "gray"}">${cliente.estado}</td>`;
+
+      const tdEditar = `
+        <td>
+          <button onclick="editarCliente(${index})">Editar</button>
+        </td>`;
+
+      fila.innerHTML = tdNombre + tdPedido + tdEntrega + tdNotas + tdCorreo + tdEstado + tdEditar;
+
+      tablaBody.appendChild(fila);
+
+      // Si está entregado, eliminar automáticamente
+      if (cliente.estado === "Entregado") {
+        setTimeout(() => {
+          clientes.splice(index, 1);
+          guardarClientes();
+          renderClientes();
+          alert(`✅ El cliente "${cliente.nombre}" ha sido marcado como entregado y fue eliminado.`);
+        }, 300);
+      }
+    });
+  };
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nombre = nombreInput.value;
+    const pedido = pedidoInput.value;
+    const entrega = entregaInput.value;
+
+    if (!nombre || !pedido || !entrega) {
+      alert("Por favor completa todos los campos.");
+      return;
+    }
+
+    const nuevoCliente = {
+      nombre,
+      pedido,
+      entrega,
+      estado: "Pendiente"
+    };
+
+    clientes.push(nuevoCliente);
+    guardarClientes();
+    renderClientes();
+    form.reset();
   });
-}
 
-function guardarTrabajo() {
-  const cliente = document.getElementById("cliente").value;
-  const pedido = document.getElementById("pedido").value;
-  const entrega = document.getElementById("entrega").value;
-  const estado = document.getElementById("estado").value;
-  const correo = document.getElementById("correo").value;
+  window.editarCliente = (index) => {
+    const cliente = clientes[index];
+    const nuevoEstado = prompt("Nuevo estado (Pendiente, En proceso, Listo, Entregado):", cliente.estado);
+    if (nuevoEstado) {
+      cliente.estado = nuevoEstado;
+      guardarClientes();
+      renderClientes();
+    }
+  };
 
-  if (!cliente || !pedido || !entrega || !correo) {
-    alert("Por favor, completa todos los campos.");
-    return;
-  }
+  // Botón Enviar PDF
+  btnPDF.addEventListener("click", async () => {
+    const nombreCliente = prompt("Nombre exacto del cliente al que deseas enviar el PDF:");
+    const cliente = clientes.find(c => c.nombre.toLowerCase() === nombreCliente.toLowerCase());
+    if (!cliente) {
+      alert("Cliente no encontrado.");
+      return;
+    }
 
-  trabajos.push({ cliente, pedido, entrega, estado, correo });
-  guardarEnLocalStorage();
-  actualizarTabla();
-  cerrarModal();
+    const notas = prompt("Escribe las notas que aparecerán en el PDF:");
+    const payload = {
+      nombre: cliente.nombre,
+      pedido: cliente.pedido,
+      entrega: cliente.entrega,
+      notas
+    };
 
-  // Limpiar campos
-  document.getElementById("cliente").value = "";
-  document.getElementById("pedido").value = "";
-  document.getElementById("entrega").value = "";
-  document.getElementById("estado").value = "Pendiente";
-  document.getElementById("correo").value = "";
-}
+    try {
+      const res = await fetch("https://hmproduccion-backend.onrender.com/enviar-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-function editarTrabajo(index) {
-  const trabajo = trabajos[index];
-  document.getElementById("cliente").value = trabajo.cliente;
-  document.getElementById("pedido").value = trabajo.pedido;
-  document.getElementById("entrega").value = trabajo.entrega;
-  document.getElementById("estado").value = trabajo.estado;
-  document.getElementById("correo").value = trabajo.correo;
-  abrirModal();
-
-  // Eliminar el trabajo actual para re-guardarlo
-  trabajos.splice(index, 1);
-}
-
-function abrirModal() {
-  document.getElementById("modal").style.display = "block";
-}
-
-function cerrarModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
-function abrirNota() {
-  document.getElementById("modalNota").style.display = "block";
-}
-
-function cerrarNota() {
-  document.getElementById("modalNota").style.display = "none";
-}
-
-function guardarNota() {
-  const nota = document.getElementById("notaTexto").value;
-  if (trabajos.length === 0) {
-    alert("Primero debes capturar un trabajo.");
-    return;
-  }
-
-  // Aplica nota al último trabajo agregado
-  trabajos[trabajos.length - 1].nota = nota;
-  guardarEnLocalStorage();
-  actualizarTabla();
-  cerrarNota();
-  document.getElementById("notaTexto").value = "";
-}
-
-function abrirEnvioPDF() {
-  const select = document.getElementById("clienteSeleccionado");
-  select.innerHTML = "";
-  trabajos.forEach((t, i) => {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = `${t.cliente} - ${t.pedido}`;
-    select.appendChild(option);
+      if (res.ok) {
+        alert("📧 PDF enviado correctamente al cliente.");
+      } else {
+        alert("❌ Error al enviar el PDF.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error de red al intentar enviar el PDF.");
+    }
   });
-  document.getElementById("modalPDF").style.display = "block";
-}
 
-function cerrarEnvioPDF() {
-  document.getElementById("modalPDF").style.display = "none";
-  document.getElementById("notasPDF").value = "";
-}
-
-function enviarPDF() {
-  const index = document.getElementById("clienteSeleccionado").value;
-  const notas = document.getElementById("notasPDF").value;
-  const trabajo = trabajos[index];
-
-  fetch("https://hmproduccion-backend.onrender.com/enviar-pdf", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      cliente: trabajo.cliente,
-      pedido: trabajo.pedido,
-      entrega: trabajo.entrega,
-      notas,
-      correo: trabajo.correo
-    })
-  })
-    .then(res => res.ok ? alert("✅ PDF enviado correctamente.") : alert("❌ Error al enviar PDF."))
-    .catch(() => alert("❌ Fallo la conexión con el servidor."));
-    
-  cerrarEnvioPDF();
-}
-
-window.onload = actualizarTabla;
+  renderClientes();
+});
