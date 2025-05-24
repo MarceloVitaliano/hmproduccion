@@ -1,61 +1,63 @@
-
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import nodemailer from 'nodemailer';
-
-export const config = {
-  runtime: 'nodejs',
-};
+import { google } from "googleapis";
+import nodemailer from "nodemailer";
+import fs from "fs";
+import path from "path";
+import { PDFDocument } from "pdf-lib";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Método no permitido" });
   }
 
+  const { nombre, pedido, fechaEntrega, notas, correo } = req.body;
+
   try {
-    const { pedido, fecha_entrega, notas, correo } = req.body;
+    // Leer el PDF base
+    const pdfPath = path.resolve("./public/actualizacion_pedido_hm_editable.pdf");
+    const existingPdfBytes = fs.readFileSync(pdfPath);
 
-    const pdfPath = join(process.cwd(), 'public', 'actualizacion_pedido_hm_editable.pdf');
-    const existingPdfBytes = await readFile(pdfPath);
+    // Cargar PDF y modificar
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const page = pdfDoc.getPage(0);
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontSize = 11;
-    const color = rgb(0, 0, 0);
-    const altura = 841.89;
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
 
-    // Coordenadas corregidas
-    page.drawText(pedido, { x: 49.90, y: altura - 107.01, size: fontSize, font, color });
-    page.drawText(fecha_entrega, { x: 67.80, y: altura - 116.35, size: fontSize, font, color });
-    page.drawText(notas || '', { x: 47.53, y: altura - 125.45, size: fontSize, font, color });
+    const font = await pdfDoc.embedFont(PDFDocument.PDFFont.Helvetica);
+    const size = 12;
+
+    firstPage.drawText(pedido, { x: 49.9, y: 660, size, font });
+    firstPage.drawText(fechaEntrega, { x: 67.8, y: 640, size, font });
+    firstPage.drawText(notas, { x: 47.5, y: 620, size, font });
 
     const pdfBytes = await pdfDoc.save();
 
-    // Configurar transporte de correo
+    // Configurar transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
-        user: 'hmencuadernaciones@gmail.com',
-        pass: process.env.GMAIL_APP_PASSWORD
-      }
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
     });
 
-    await transporter.sendMail({
-      from: 'HM Encuadernaciones <hmencuadernaciones@gmail.com>',
+    const mailOptions = {
+      from: `"HM Encuadernaciones" <${process.env.GMAIL_USER}>`,
       to: correo,
-      subject: 'Actualización de su pedido | HM Encuadernaciones',
-      text: 'Estimado cliente, adjuntamos el estado actualizado de su pedido. Saludos cordiales.',
-      attachments: [{
-        filename: 'actualizacion_pedido.pdf',
-        content: Buffer.from(pdfBytes),
-        contentType: 'application/pdf'
-      }]
-    });
+      subject: "Actualización de su pedido | HM Encuadernaciones",
+      text: `Hola ${nombre}, te compartimos la actualización de tu pedido.`,
+      attachments: [
+        {
+          filename: "actualizacion_pedido.pdf",
+          content: pdfBytes,
+          contentType: "application/pdf",
+        },
+      ],
+    };
 
-    return res.status(200).json({ success: true });
+    await transporter.sendMail(mailOptions);
 
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error al enviar PDF:", error);
+    res.status(500).json({ success: false, message: "Error interno del servidor" });
   }
 }
