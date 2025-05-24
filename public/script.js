@@ -157,7 +157,7 @@ function enviarPDF() {
   const cliente = clientes[clienteSeleccionado];
   const nota = document.getElementById("pdf-nota").value.trim();
 
-  fetch("https://hmproduccion.vercel.app/api/generar-pdf", {
+  fetch("/api/generar-pdf", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
