@@ -152,21 +152,20 @@ function cerrarModalPDF() {
   document.getElementById("modal-pdf").style.display = "none";
 }
 
-// --- Enviar PDF al cliente vía backend ---
+// --- Enviar PDF al cliente vía backend VERCEL ---
 function enviarPDF() {
   const cliente = clientes[clienteSeleccionado];
   const nota = document.getElementById("pdf-nota").value.trim();
 
-  fetch("https://hmcorreospdf.onrender.com/enviar-pdf", {
+  fetch("https://hmproduccion.vercel.app/api/generar-pdf", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      nombre: cliente.nombre,
       pedido: cliente.pedido,
-      fechaEntrega: cliente.fecha,
-      notas: nota,
+      fecha_entrega: cliente.fecha,
+      notas: nota || cliente.notas || "",
       correo: cliente.correo
     })
   })
